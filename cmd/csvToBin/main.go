@@ -99,6 +99,21 @@ func csvToMap(fn string) *maps.Map {
 			case 23:
 				// Female sign
 				ret.SetTileAt(x, y, maps.Tile('F'))
+			case 24:
+				// bed
+				ret.SetTileAt(x, y, maps.NewTile('#', termbox.ColorYellow, true, true, 0x00))
+			case 25:
+				// curtain
+				ret.SetTileAt(x, y, maps.NewTile('{', termbox.ColorYellow, false, false, 0x0b))
+			case 26:
+				// computer
+				ret.SetTileAt(x, y, maps.NewTile('=', termbox.ColorDefault, true, false, 0x00))
+			case 27:
+				// curtain rail
+				ret.SetTileAt(x, y, maps.NewTile('|', termbox.ColorCyan, true, false, 0x00))
+			case 28:
+				// railing
+				ret.SetTileAt(x, y, maps.NewTile('%', termbox.ColorDefault, false, false, 0x00))
 			default:
 				// void
 				ret.SetTileAt(x, y, maps.Tile(0x0020))
