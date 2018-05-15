@@ -36,6 +36,20 @@ const (
 	OPENDOORMASK      = 0x8800
 )
 
+func NewTile(sprite rune, color termbox.Attribute, seethrough bool, passable bool, DoorData byte) Tile {
+	var ret Tile = 0
+	ret |= Tile(sprite&rune(SPRITEMASK))
+	ret |= (Tile(color)&COLORMASK)<<7
+	if seethrough {
+		ret |= VISMASK
+	}
+	if passable {
+		ret |= PASSMASK
+	}
+	ret |= Tile(DoorData&0x0F)<<12
+	return ret
+}
+
 // Extract the ascii from the tile; or the open door offset, if appropriate.
 func GetSprite(t Tile) rune {
 	if OPENDOORMASK&t == OPENDOORMASK {

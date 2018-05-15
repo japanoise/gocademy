@@ -2,8 +2,6 @@ package maps
 
 import (
 	"errors"
-	"log"
-	"os"
 )
 
 type Map struct {
