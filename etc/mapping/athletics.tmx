@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="220" height="150" tilewidth="32" tileheight="32" nextobjectid="3">
+ <tileset firstgid="1" name="tiles" tilewidth="32" tileheight="32" tilecount="24">
+  <image source="tiles.png" width="192" height="128"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="220" height="150">
+  <data encoding="base64" compression="zlib">
+   eJzt3Wtz2kYUgGGmSXP50LrpLfn/v7TVOEwoRSDh3XP2rJ4Pz3iscYK02pcFAfaX0+n0BQjzE9Cd3iCO3iDOjL39wbSy59ZRe8s+74wne07O1lv2+aSO7Llatbfs80Zt2fO3Sm/Z54n5ZM/pEXvLPifMT2/554DjOWJv2WMOR+lthvGj/nyJnDMZvVUaH2qoMqeiext9PKht9OYiexvx+JnXiM1F9TbSMXMsIzUX0dsIxwkjNNe7N50xmszmevamNUaVtdb16k1rjC6juczesscbZuhNa1RSuTetUVHUOteyN61R2Wy9ZY8n3BOxxrXqTWvMQG8Qq2dzLXrTGrPRG8Tq0dxbe9MaM2vdnN5g3Ui9aY0jaNmc3uC+EXrTGkeiN4ijN4iT2ZvWOKIW815vsI3eII7eIE6L1wX0BtvpDeJE96Y1jkxvEEdvEEdvEEdvEEdvEEdvEEdvEEdvECe6txa3CVXpDeLoDeLoDeK8dd7rDbZpMe/1BtvoDeJk9fbotrPHBVp71Fpmb5pjNq3mu97gvlZr28Lf64D79AYxWra28PcWYZ3eIE7r+f3W3h7tU/Z4wbNar22L3r1pjoq2tJbV25b9yx4/2KNHawu9wX/1am3Rqrct+5k9jvBIr8eRZ5G9aY6R9W5t0bK3rfucPa5wbWtro/W2dd+zxxfOolpbZPWmOUYQ2dqiR297jiN7vDmu6NYWvXrbczzZ487xZLS26NnbnuPKHn+OY09r1Xrbe3zZ54J57e2sx3yM6G3vsWafF+YzQmuLqN6eOebsc0RtzzTWe95F9vbsGGSfN2p5trOIuRbd21vHQ3+sqTCvMnprNT4apNr8yeyt5XjBM6Lne3ZvuiNLxjwfpTfNESVzjo/Um+7oKXtej9qb7mglew5X6k1/PCN7ns7SmwZZkz0Pj9Kb/o4pe57pDcanN4ijN4ijN4ijtxreX8jeF56ntxr0Nge91aC3OeitBr3NQW816G0OeqtBb3PQWw16m4PeatDbHPRWg97moLca9DYHvdWgtzlk9vZlUj3GSm9zyO7t/SDevcHL1fc9xkpvc9Dbj97+/NfP378u3//ywLvvP39Jb9yjt/Xerlu61db1tpdOY6W3OYzS29+Btvb26x1rvVnfuGek3v4KsKe3ez6c9MZ+enu19HPZzfX3t9z6Gb1xj95efT39f337fFpv7fP3f1O5t2euw15ruT3yeq/exns8ee7t85XzturXSx7dp9w7ztbWHk/o7Xi97ZmH1da3y/uPta8Rva3dht6O19ue9U1vetOb9U1vY9Db/de7r9e2yzVurbfer83rrS69/ejtGdfz48PK/683venN+qY3vY3Sm+dvetNbfG8zX588vzft62n9MbPe9GZ9a9Pbrf3/7YL1TW8jr2+V3l/ycmP/z8f06ca23r2tyW5Eb+17+3bav759u7F9hvVt+frxxraeet1PjUZvryp9PqCVtd4un9dFPX/T27F6u/V48p7Mz7+1cuv+Yus2vemtdW+jfr7b+lbXSL2N9vsUHs2R6tdL1nr7eGOb3ubqLdut3mb//Vxr1yc/3djWu7fZrkPq7XFvz6r6+ydHev3N+hZ327Op1Nv5edq30/37FL3V743tevU2yvsn9cZI9DYHvdUwe2+ulzCS2XuzvjESvc1BbzXobQ56q0Fvc9BbDb17W6O3tvRWQ8/Xu/e8j6bn3w/IHuMIequhR2/E01sNepuD3mrQ2xz0VoPe5qC3GvQ2B73VoLc5ZH9WjG1+v5C9L7zNP3GTcWs=
+  </data>
+ </layer>
+ <objectgroup name="Object Layer 1" visible="0">
+  <object id="1" x="3514.33" y="354.667" width="2899.67" height="2813.33">
+   <ellipse/>
+  </object>
+  <object id="2" x="3847" y="617" width="2297" height="2296">
+   <ellipse/>
+  </object>
+ </objectgroup>
+</map>
