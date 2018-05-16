@@ -38,15 +38,15 @@ const (
 
 func NewTile(sprite rune, color termbox.Attribute, seethrough bool, passable bool, DoorData byte) Tile {
 	var ret Tile = 0
-	ret |= Tile(sprite&rune(SPRITEMASK))
-	ret |= (Tile(color)&COLORMASK)<<7
+	ret |= Tile(sprite & rune(SPRITEMASK))
+	ret |= (Tile(color) & COLORMASK) << 7
 	if seethrough {
 		ret |= VISMASK
 	}
 	if passable {
 		ret |= PASSMASK
 	}
-	ret |= Tile(DoorData&0x0F)<<12
+	ret |= Tile(DoorData&0x0F) << 12
 	return ret
 }
 

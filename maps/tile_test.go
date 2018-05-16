@@ -2,6 +2,7 @@ package maps
 
 import (
 	"testing"
+
 	"github.com/nsf/termbox-go"
 )
 

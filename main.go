@@ -1,9 +1,10 @@
 package main
 
 import (
+	"os"
+
 	"github.com/japanoise/gocademy/maps"
 	"github.com/nsf/termbox-go"
-	"os"
 )
 
 func main() {

@@ -2,11 +2,12 @@ package main
 
 import (
 	"encoding/csv"
-	"github.com/japanoise/gocademy/maps"
-	"github.com/nsf/termbox-go"
 	"log"
 	"os"
 	"strconv"
+
+	"github.com/japanoise/gocademy/maps"
+	"github.com/nsf/termbox-go"
 )
 
 func csvToMap(fn string) *maps.Map {
