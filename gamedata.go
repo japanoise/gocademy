@@ -24,5 +24,7 @@ func NewGame() *Gamedata {
 }
 
 func (g *Gamedata) GetNextId() characters.Id {
-	return characters.Id(strconv.Itoa(g.IdNum))
+	ret := characters.Id(strconv.Itoa(g.IdNum))
+	g.IdNum++
+	return ret
 }
