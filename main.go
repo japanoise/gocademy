@@ -8,29 +8,23 @@ import (
 )
 
 var (
-	GroundFloor *maps.Map
-	FirstFloor  *maps.Map
-	Roof        *maps.Map
-	Athletics   *maps.Map
-	AllMaps     []*maps.Map
-	CurrentMap  int
+	AllMaps []*maps.Map
 )
 
 func LoadMaps() {
+	AllMaps = make([]*maps.Map, 4)
 	r := bytes.NewReader(MustAsset("bindata/groundfloor.bin"))
-	GroundFloor, _ = maps.Deserialize(r)
+	AllMaps[maps.GROUNDFLOOR], _ = maps.Deserialize(r)
 	r = bytes.NewReader(MustAsset("bindata/firstfloor.bin"))
-	FirstFloor, _ = maps.Deserialize(r)
+	AllMaps[maps.FIRSTFLOOR], _ = maps.Deserialize(r)
 	r = bytes.NewReader(MustAsset("bindata/roof.bin"))
-	Roof, _ = maps.Deserialize(r)
+	AllMaps[maps.ROOF], _ = maps.Deserialize(r)
 	r = bytes.NewReader(MustAsset("bindata/athletics.bin"))
-	Athletics, _ = maps.Deserialize(r)
-	AllMaps = []*maps.Map{GroundFloor, FirstFloor, Roof, Athletics}
+	AllMaps[maps.ATHLETICS], _ = maps.Deserialize(r)
 }
 
 func init() {
 	LoadMaps()
-	CurrentMap = 0
 }
 
 func main() {
@@ -38,11 +32,15 @@ func main() {
 	defer termbox.Close()
 
 	playing := true
-	x, y := 0, 0
+
+	gamedata := NewGame()
+	player := gamedata.Chars[gamedata.PlayerId]
+
 	for playing {
 		termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
 		sx, sy := termbox.Size()
-		AllMaps[CurrentMap].DrawMap(x, y, sx, sy)
+		AllMaps[player.Loc.MapNum].DrawMap(player.Loc.X-(sx/2), player.Loc.Y-(sy/2), sx, sy)
+		termbox.SetCell(sx/2, sy/2, '@', termbox.ColorDefault, termbox.ColorDefault)
 		termbox.Flush()
 		ev := termbox.PollEvent()
 		if ev.Type == termbox.EventKey {
@@ -50,15 +48,15 @@ func main() {
 			case termbox.KeyEsc:
 				playing = false
 			case termbox.KeyArrowRight:
-				x++
+				player.Loc.X++
 			case termbox.KeyArrowLeft:
-				x--
+				player.Loc.X--
 			case termbox.KeyArrowDown:
-				y++
+				player.Loc.Y++
 			case termbox.KeyArrowUp:
-				y--
+				player.Loc.Y--
 			case termbox.KeyPgdn:
-				CurrentMap = (CurrentMap + 1) % len(AllMaps)
+				player.Loc.MapNum = (player.Loc.MapNum + 1) % len(AllMaps)
 			}
 		}
 	}

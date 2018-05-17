@@ -6,6 +6,7 @@ type Character struct {
 	Relationships map[Id]Relation
 	ID            Id
 	Personality   Id
+	Loc           Location
 	// Add like, hair and shit here
 }
 
@@ -15,4 +16,11 @@ func (c *Character) GetDialogue(id Id) string {
 	} else {
 		return Default.GetDialogue(id)
 	}
+}
+
+func NewCharacter(forename, surname string, id Id) *Character {
+	ret := &Character{}
+	ret.GivenName = forename
+	ret.Surname = surname
+	return ret
 }
