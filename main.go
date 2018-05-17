@@ -48,13 +48,13 @@ func main() {
 			case termbox.KeyEsc:
 				playing = false
 			case termbox.KeyArrowRight:
-				player.Loc.X++
+				MovePlayer(1, 0, player)
 			case termbox.KeyArrowLeft:
-				player.Loc.X--
+				MovePlayer(-1, 0, player)
 			case termbox.KeyArrowDown:
-				player.Loc.Y++
+				MovePlayer(0, 1, player)
 			case termbox.KeyArrowUp:
-				player.Loc.Y--
+				MovePlayer(0, -1, player)
 			case termbox.KeyPgdn:
 				player.Loc.MapNum = (player.Loc.MapNum + 1) % len(AllMaps)
 			}
