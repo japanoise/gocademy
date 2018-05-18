@@ -3,6 +3,7 @@ package characters
 type Character struct {
 	GivenName     string
 	Surname       string
+	Gender        CGender
 	Relationships map[Id]Relation
 	ID            Id
 	Personality   Id

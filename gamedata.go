@@ -17,7 +17,7 @@ func NewGame() *Gamedata {
 	ret := &Gamedata{}
 	ret.Chars = make(map[characters.Id]*characters.Character)
 	ret.PlayerId = ret.GetNextId()
-	player := characters.NewCharacter("Player", "One", ret.PlayerId)
+	player := CharGen(ret)
 	player.Loc = characters.Location{5, 5, maps.GROUNDFLOOR}
 	ret.Chars[ret.PlayerId] = player
 	return ret
