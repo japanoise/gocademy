@@ -42,7 +42,7 @@ func main() {
 	charmaps := constructCharMaps(gamedata)
 
 	for playing {
-		DrawScreen(charmaps, player)
+		DrawScreen(charmaps[player.Loc.MapNum], player)
 		ev := termbox.PollEvent()
 		if ev.Type == termbox.EventKey {
 			switch ev.Key {
