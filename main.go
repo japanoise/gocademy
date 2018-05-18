@@ -2,7 +2,9 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 
+	"github.com/japanoise/gocademy/characters"
 	"github.com/japanoise/gocademy/maps"
 	"github.com/nsf/termbox-go"
 )
@@ -27,6 +29,21 @@ func LoadMaps() {
 	AllMaps[maps.ATHLETICS], _ = maps.Deserialize(r)
 }
 
+func LoadNames() ([]string, []string, []string, []string) {
+	enbynames := []string{}
+	err := json.Unmarshal(MustAsset("bindata/enbynames.json"), &enbynames)
+	if err != nil {
+		panic(err)
+	}
+	boynames := []string{}
+	json.Unmarshal(MustAsset("bindata/boynames.json"), &boynames)
+	girlnames := []string{}
+	json.Unmarshal(MustAsset("bindata/girlnames.json"), &girlnames)
+	surnames := []string{}
+	json.Unmarshal(MustAsset("bindata/surnames.json"), &surnames)
+	return enbynames, boynames, girlnames, surnames
+}
+
 func init() {
 	LoadMaps()
 }
@@ -38,29 +55,35 @@ func main() {
 	playing := true
 
 	gamedata := NewGame()
+	var target *characters.Character = nil
+	var message = ""
 	player := gamedata.Chars[gamedata.PlayerId]
 	charmaps := constructCharMaps(gamedata)
 
 	for playing {
-		DrawScreen(charmaps[player.Loc.MapNum], player)
+		DrawScreen(charmaps[player.Loc.MapNum], player, message)
+		message = ""
 		ev := termbox.PollEvent()
 		if ev.Type == termbox.EventKey {
 			switch ev.Key {
 			case termbox.KeyEsc:
 				playing = false
 			case termbox.KeyArrowRight:
-				MovePlayer(1, 0, player, charmaps[player.Loc.MapNum])
+				target = MovePlayer(1, 0, player, charmaps[player.Loc.MapNum])
 			case termbox.KeyArrowLeft:
-				MovePlayer(-1, 0, player, charmaps[player.Loc.MapNum])
+				target = MovePlayer(-1, 0, player, charmaps[player.Loc.MapNum])
 			case termbox.KeyArrowDown:
-				MovePlayer(0, 1, player, charmaps[player.Loc.MapNum])
+				target = MovePlayer(0, 1, player, charmaps[player.Loc.MapNum])
 			case termbox.KeyArrowUp:
-				MovePlayer(0, -1, player, charmaps[player.Loc.MapNum])
+				target = MovePlayer(0, -1, player, charmaps[player.Loc.MapNum])
 			case termbox.KeyPgdn:
 				player.Loc.MapNum = (player.Loc.MapNum + 1) % len(AllMaps)
 				// This is suboptimal (may cause OOB panic), but it's the fast way for now.
 				charmaps = constructCharMaps(gamedata)
 			}
+		}
+		if target != nil {
+			message = target.GetNameString()
 		}
 	}
 }

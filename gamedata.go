@@ -1,11 +1,15 @@
 package main
 
 import (
+	"math/rand"
 	"strconv"
+	"time"
 
 	"github.com/japanoise/gocademy/characters"
 	"github.com/japanoise/gocademy/maps"
 )
+
+const NUMSTUDENTS = 10
 
 type Gamedata struct {
 	Chars    map[characters.Id]*characters.Character
@@ -20,6 +24,13 @@ func NewGame() *Gamedata {
 	player := CharGen(ret)
 	player.Loc = characters.Location{5, 5, maps.GROUNDFLOOR}
 	ret.Chars[ret.PlayerId] = player
+	enames, bnames, gnames, surnames := LoadNames()
+	rand := rand.New(rand.NewSource(time.Now().UnixNano()))
+	for i := 0; i < NUMSTUDENTS; i++ {
+		student := RandChar(ret, rand, enames, bnames, gnames, surnames)
+		ret.Chars[student.ID] = student
+		student.Loc = ret.NextSpawnPoint()
+	}
 	return ret
 }
 
@@ -27,4 +38,8 @@ func (g *Gamedata) GetNextId() characters.Id {
 	ret := characters.Id(strconv.Itoa(g.IdNum))
 	g.IdNum++
 	return ret
+}
+
+func (g *Gamedata) NextSpawnPoint() characters.Location {
+	return characters.Location{1, g.IdNum, maps.GROUNDFLOOR}
 }

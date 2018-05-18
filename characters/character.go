@@ -19,6 +19,10 @@ func (c *Character) GetDialogue(id Id) string {
 	}
 }
 
+func (c *Character) GetNameString() string {
+	return c.Surname + " " + c.GivenName
+}
+
 func NewCharacter(forename, surname string, id Id) *Character {
 	ret := &Character{}
 	ret.GivenName = forename

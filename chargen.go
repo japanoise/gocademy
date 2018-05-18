@@ -1,6 +1,8 @@
 package main
 
 import (
+	"math/rand"
+
 	"github.com/japanoise/gocademy/characters"
 	"github.com/japanoise/termbox-util"
 )
@@ -13,7 +15,7 @@ var pronounStrings []string = []string{
 
 func GetChargenRefreshFunc(c *characters.Character) func(int, int) {
 	return func(sx, sy int) {
-		name := c.Surname + " " + c.GivenName
+		name := c.GetNameString()
 		pronouns := pronounStrings[c.Gender]
 		termutil.Printstring("Name:", sx-5, 1)
 		termutil.Printstring(name, sx-(len(name)), 2)
@@ -35,4 +37,28 @@ func CharGen(g *Gamedata) *characters.Character {
 	ret.Gender = characters.CGender(termutil.ChoiceIndexCallback("Character's pronouns?", pronounStrings, 0, func(choice int, sx int, sy int) { ret.Gender = characters.CGender(choice); rfunc(sx, sy) }))
 	ret.ID = g.GetNextId()
 	return ret
+}
+
+func RandChar(g *Gamedata, rand *rand.Rand, enbynames, boynames, girlnames, surnames []string) *characters.Character {
+	ret := &characters.Character{}
+	ret.Gender = randGender(rand)
+	switch ret.Gender {
+	case characters.ENBY:
+		ret.GivenName = randomString(enbynames)
+	case characters.MALE:
+		ret.GivenName = randomString(boynames)
+	case characters.FEMALE:
+		ret.GivenName = randomString(girlnames)
+	}
+	ret.Surname = randomString(surnames)
+	ret.ID = g.GetNextId()
+	return ret
+}
+
+func randGender(rand *rand.Rand) characters.CGender {
+	return characters.CGender(rand.Intn(3))
+}
+
+func randomString(strings []string) string {
+	return strings[rand.Intn(len(strings))]
 }
