@@ -14,7 +14,9 @@ const (
 )
 
 var (
-	AllMaps []*maps.Map
+	AllMaps   []*maps.Map
+	ConfigDir string
+	DataDir   string
 )
 
 func LoadMaps() {
@@ -46,15 +48,23 @@ func LoadNames() ([]string, []string, []string, []string) {
 
 func init() {
 	LoadMaps()
+	var err error
+	ConfigDir, DataDir, err = initDirs("gocademy")
+	if err != nil {
+		panic(err)
+	}
 }
 
 func main() {
 	termbox.Init()
 	defer termbox.Close()
 
-	playing := true
+	playing, gamedata := TitleScreen()
 
-	gamedata := NewGame()
+	if !playing {
+		return
+	}
+
 	var target *characters.Character = nil
 	var message = ""
 	player := gamedata.Chars[gamedata.PlayerId]
@@ -67,7 +77,7 @@ func main() {
 		if ev.Type == termbox.EventKey {
 			switch ev.Key {
 			case termbox.KeyEsc:
-				playing = false
+				playing, message = PauseMenu(gamedata)
 			case termbox.KeyArrowRight:
 				target = MovePlayer(1, 0, player, charmaps[player.Loc.MapNum])
 			case termbox.KeyArrowLeft:
