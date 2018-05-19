@@ -1,16 +1,25 @@
 package main
 
 import (
+	"encoding/json"
+
 	"github.com/japanoise/gocademy/characters"
 	"github.com/japanoise/gocademy/maps"
+	asciiart "github.com/japanoise/termbox-asciiart"
 	termutil "github.com/japanoise/termbox-util"
 )
 
 func TitleScreen() (bool, *Gamedata) {
+	building := &asciiart.Ascii{}
+	err := json.Unmarshal(MustAsset("bindata/building.json"), building)
+	if err != nil {
+		panic(err)
+	}
 	message := ""
 	for {
 		choices := []string{"New game", "Load game", "Quit to terminal"}
 		choice := termutil.ChoiceIndexCallback("gocademy", choices, 0, func(_, _, sy int) {
+			building.DrawAscii(0, 5)
 			if message != "" {
 				termutil.Printstring(message, 0, sy-1)
 			}
