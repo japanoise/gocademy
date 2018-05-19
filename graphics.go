@@ -8,7 +8,11 @@ import (
 )
 
 func DrawChar(x, y int, char *characters.Character) {
-	termbox.SetCell(x, y, '@', termbox.ColorDefault, termbox.ColorDefault)
+	if char.HairColor == termbox.ColorBlack || char.HairColor == termbox.ColorWhite {
+		termbox.SetCell(x, y, char.Sprite, char.HairColor, termbox.ColorRed)
+	} else {
+		termbox.SetCell(x, y, char.Sprite, char.HairColor, termbox.ColorDefault)
+	}
 }
 
 func DrawChars(sx, sy, originx, originy int, m *maps.Map, charmap *charmap) {

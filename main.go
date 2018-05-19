@@ -14,9 +14,15 @@ const (
 )
 
 var (
-	AllMaps   []*maps.Map
-	ConfigDir string
-	DataDir   string
+	AllMaps       []*maps.Map
+	Colors        []string            = []string{"Black", "Red", "Green", "Yellow", "Blue", "Magenta", "Cyan", "White"}
+	ColorsTermbox []termbox.Attribute = []termbox.Attribute{termbox.ColorBlack, termbox.ColorRed, termbox.ColorGreen, termbox.ColorYellow, termbox.ColorBlue, termbox.ColorMagenta, termbox.ColorCyan, termbox.ColorWhite}
+	ConfigDir     string
+	DataDir       string
+	FrontHair     map[characters.Id]*characters.Element
+	BackHair      map[characters.Id]*characters.Element
+	HairAccessory map[characters.Id]*characters.Element
+	TopicalDetail map[characters.Id]*characters.Element
 )
 
 func LoadMaps() {
@@ -53,6 +59,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+	LoadElements()
 }
 
 func main() {
