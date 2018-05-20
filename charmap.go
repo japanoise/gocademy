@@ -51,3 +51,9 @@ func (c *charmap) moveNoCollide(sourceX, sourceY, destX, destY int) *characters.
 		return nil
 	}
 }
+
+// Jumps the source character to the destination character. Doesn't test bounds, so be responsible.
+func jumpMap(sourcex, sourcey int, sourcec *charmap, destx, desty int, destc *charmap) {
+	destc.data[destx][desty] = sourcec.data[sourcex][sourcey]
+	sourcec.data[sourcex][sourcey] = nil
+}

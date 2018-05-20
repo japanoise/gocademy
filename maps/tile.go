@@ -36,6 +36,19 @@ const (
 	OPENDOORMASK      = 0x8800
 )
 
+// Typical tiles
+const (
+	FLOOR      Tile = 0x0c2e
+	GRASS           = 0x0dac
+	WALL            = 0x0023
+	CLOSEDDOOR      = 0xc02b
+	OPENDOOR        = 0xcc2b
+	GATE            = 3375
+	STAIRUP         = 3132
+	STAIRDOWN       = 3134
+	BED             = 3619
+)
+
 func NewTile(sprite rune, color termbox.Attribute, seethrough bool, passable bool, DoorData byte) Tile {
 	var ret Tile = 0
 	ret |= Tile(sprite & rune(SPRITEMASK))

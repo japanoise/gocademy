@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 
 	"github.com/japanoise/gocademy/characters"
 	"github.com/japanoise/gocademy/maps"
@@ -86,17 +87,15 @@ func main() {
 			case termbox.KeyEsc:
 				playing, message = PauseMenu(gamedata)
 			case termbox.KeyArrowRight:
-				target, message = MovePlayer(1, 0, player, charmaps[player.Loc.MapNum])
+				target, message = MovePlayer(1, 0, player, charmaps)
 			case termbox.KeyArrowLeft:
-				target, message = MovePlayer(-1, 0, player, charmaps[player.Loc.MapNum])
+				target, message = MovePlayer(-1, 0, player, charmaps)
 			case termbox.KeyArrowDown:
-				target, message = MovePlayer(0, 1, player, charmaps[player.Loc.MapNum])
+				target, message = MovePlayer(0, 1, player, charmaps)
 			case termbox.KeyArrowUp:
-				target, message = MovePlayer(0, -1, player, charmaps[player.Loc.MapNum])
-			case termbox.KeyPgdn:
-				player.Loc.MapNum = (player.Loc.MapNum + 1) % len(AllMaps)
-				// This is suboptimal (may cause OOB panic), but it's the fast way for now.
-				charmaps = constructCharMaps(gamedata)
+				target, message = MovePlayer(0, -1, player, charmaps)
+			case termbox.KeySpace:
+				message = fmt.Sprint(player.Loc)
 			}
 		}
 		if target != nil {
