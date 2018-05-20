@@ -86,13 +86,13 @@ func main() {
 			case termbox.KeyEsc:
 				playing, message = PauseMenu(gamedata)
 			case termbox.KeyArrowRight:
-				target = MovePlayer(1, 0, player, charmaps[player.Loc.MapNum])
+				target, message = MovePlayer(1, 0, player, charmaps[player.Loc.MapNum])
 			case termbox.KeyArrowLeft:
-				target = MovePlayer(-1, 0, player, charmaps[player.Loc.MapNum])
+				target, message = MovePlayer(-1, 0, player, charmaps[player.Loc.MapNum])
 			case termbox.KeyArrowDown:
-				target = MovePlayer(0, 1, player, charmaps[player.Loc.MapNum])
+				target, message = MovePlayer(0, 1, player, charmaps[player.Loc.MapNum])
 			case termbox.KeyArrowUp:
-				target = MovePlayer(0, -1, player, charmaps[player.Loc.MapNum])
+				target, message = MovePlayer(0, -1, player, charmaps[player.Loc.MapNum])
 			case termbox.KeyPgdn:
 				player.Loc.MapNum = (player.Loc.MapNum + 1) % len(AllMaps)
 				// This is suboptimal (may cause OOB panic), but it's the fast way for now.

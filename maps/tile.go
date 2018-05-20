@@ -81,19 +81,15 @@ func IsDoor(t Tile) bool {
 
 // Open the door
 func OpenDoor(t Tile) Tile {
-	if IsDoor(t) {
-		t = t &^ (VISMASK)
-		t = t &^ (PASSMASK)
-	}
+	t |= (VISMASK)
+	t |= (PASSMASK)
 	return t
 }
 
 // Close the door
 func CloseDoor(t Tile) Tile {
-	if IsDoor(t) {
-		t |= (VISMASK)
-		t |= (PASSMASK)
-	}
+	t = t &^ (VISMASK)
+	t = t &^ (PASSMASK)
 	return t
 }
 

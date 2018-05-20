@@ -52,7 +52,7 @@ func PauseMenu(g *Gamedata) (bool, string) {
 	return false, ""
 }
 
-func MovePlayer(dx, dy int, player *characters.Character, pcMap *charmap) *characters.Character {
+func MovePlayer(dx, dy int, player *characters.Character, pcMap *charmap) (*characters.Character, string) {
 	destX, destY := player.Loc.X+dx, player.Loc.Y+dy
 	dest, err := AllMaps[player.Loc.MapNum].TileAt(destX, destY)
 	if err == nil && maps.IsPassable(dest) {
@@ -61,7 +61,10 @@ func MovePlayer(dx, dy int, player *characters.Character, pcMap *charmap) *chara
 			player.Loc.X = destX
 			player.Loc.Y = destY
 		}
-		return target
+		return target, ""
+	} else if err == nil && maps.IsDoor(dest) {
+		AllMaps[player.Loc.MapNum].SetTileAt(destX, destY, maps.OpenDoor(dest))
+		return nil, "You open the door."
 	}
-	return nil
+	return nil, ""
 }
