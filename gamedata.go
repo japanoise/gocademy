@@ -26,8 +26,16 @@ func NewGame() *Gamedata {
 	ret.Chars[ret.PlayerId] = player
 	enames, bnames, gnames, surnames := LoadNames()
 	rand := rand.New(rand.NewSource(time.Now().UnixNano()))
+	backhairids := make([]characters.Id, 0, len(BackHair))
+	for key := range BackHair {
+		backhairids = append(backhairids, key)
+	}
+	fronthairids := make([]characters.Id, 0, len(FrontHair))
+	for key := range FrontHair {
+		fronthairids = append(fronthairids, key)
+	}
 	for i := 0; i < NUMSTUDENTS; i++ {
-		student := RandChar(ret, rand, enames, bnames, gnames, surnames)
+		student := RandChar(ret, rand, enames, bnames, gnames, surnames, backhairids, fronthairids)
 		ret.Chars[student.ID] = student
 		student.Loc = ret.NextSpawnPoint()
 	}

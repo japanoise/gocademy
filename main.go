@@ -99,7 +99,8 @@ func main() {
 			}
 		}
 		if target != nil {
-			message = target.GetNameString()
+			message = Interact(player, target)
+			target = nil
 		}
 	}
 }

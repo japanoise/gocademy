@@ -1,4 +1,12 @@
 package characters
 
-// placeholder lmao. I'll think of how to store this later
-type Relation struct{}
+type RLevel int8
+
+type Relation struct {
+	Intensity RLevel
+	Love      RLevel
+}
+
+const (
+	FriendThreshold RLevel = 10
+)

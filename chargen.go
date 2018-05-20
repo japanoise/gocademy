@@ -27,6 +27,18 @@ func GetChargenRefreshFunc(c *characters.Character) func(int, int) {
 	}
 }
 
+func ApplyEyeColor(col termbox.Attribute, ret *characters.Character) {
+	ret.Face.Data[3][4].Fg = col
+	ret.Face.Data[3][6].Fg = col
+	if col == termbox.ColorBlack || col == termbox.ColorWhite {
+		ret.Face.Data[3][4].Bg = termbox.ColorRed
+		ret.Face.Data[3][6].Bg = termbox.ColorRed
+	} else {
+		ret.Face.Data[3][4].Bg = termbox.ColorDefault
+		ret.Face.Data[3][6].Bg = termbox.ColorDefault
+	}
+}
+
 // Generate a character
 func CharGen(g *Gamedata) *characters.Character {
 	termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
@@ -71,15 +83,7 @@ func CharGen(g *Gamedata) *characters.Character {
 
 	eyecolor := ColorsTermbox[termutil.ChoiceIndexCallback(ret.GivenName+"'s eye color?", Colors, 0, func(choice, sx, sy int) {
 		col := ColorsTermbox[choice]
-		ret.Face.Data[3][4].Fg = col
-		ret.Face.Data[3][6].Fg = col
-		if col == termbox.ColorBlack || col == termbox.ColorWhite {
-			ret.Face.Data[3][4].Bg = termbox.ColorRed
-			ret.Face.Data[3][6].Bg = termbox.ColorRed
-		} else {
-			ret.Face.Data[3][4].Bg = termbox.ColorDefault
-			ret.Face.Data[3][6].Bg = termbox.ColorDefault
-		}
+		ApplyEyeColor(col, ret)
 		rfunc(sx, sy)
 	})]
 	ret.EyeColor = eyecolor
@@ -104,7 +108,7 @@ func elemSelec(smap map[characters.Id]*characters.Element, toSelec string, ret *
 	return retId
 }
 
-func RandChar(g *Gamedata, rand *rand.Rand, enbynames, boynames, girlnames, surnames []string) *characters.Character {
+func RandChar(g *Gamedata, rand *rand.Rand, enbynames, boynames, girlnames, surnames []string, backhairids, fronthairids []characters.Id) *characters.Character {
 	ret := &characters.Character{}
 	ret.Gender = randGender(rand)
 	switch ret.Gender {
@@ -120,6 +124,24 @@ func RandChar(g *Gamedata, rand *rand.Rand, enbynames, boynames, girlnames, surn
 	ret.EyeColor = randomColor(rand)
 	ret.ID = g.GetNextId()
 	ret.GenSprite()
+
+	err := json.Unmarshal(MustAsset("bindata/face.json"), &ret.Face)
+	if err != nil {
+		panic(err)
+	}
+
+	eyes := []string{"^", "@", "I", "*", "~", "O", "n", "="}
+	eye := randomString(eyes, rand)
+	ret.Face.Data[3][4].C = eye
+	ret.Face.Data[3][6].C = eye
+	mouths := []string{"w", "^", "~", "v", "u", "3", "_", "-"}
+	ApplyEyeColor(ret.EyeColor, ret)
+
+	ret.Face.Data[5][5].C = randomString(mouths, rand)
+	ret.BackHairId = randomId(backhairids, rand)
+	ElementMerge(ret, BackHair[ret.BackHairId], ret.HairColor)
+	ret.FrontHairId = randomId(fronthairids, rand)
+	ElementMerge(ret, FrontHair[ret.FrontHairId], ret.HairColor)
 	return ret
 }
 
@@ -128,6 +150,10 @@ func randGender(rand *rand.Rand) characters.CGender {
 }
 
 func randomString(strings []string, rand *rand.Rand) string {
+	return strings[rand.Intn(len(strings))]
+}
+
+func randomId(strings []characters.Id, rand *rand.Rand) characters.Id {
 	return strings[rand.Intn(len(strings))]
 }
 

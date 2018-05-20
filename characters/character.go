@@ -11,7 +11,7 @@ type Character struct {
 	GivenName       string
 	Surname         string
 	Gender          CGender
-	Relationships   map[Id]Relation
+	Relationships   map[Id]*Relation
 	ID              Id
 	PersonalityId   Id
 	Loc             Location
@@ -25,9 +25,13 @@ type Character struct {
 	EyeColor        termbox.Attribute
 }
 
+func (c *Character) SayDialogue(id Id) string {
+	return c.GetNameString() + ": " + c.GetDialogue(id)
+}
+
 func (c *Character) GetDialogue(id Id) string {
-	if Personalities[id] != nil {
-		return Personalities[id].GetDialogue(id)
+	if Personalities[c.PersonalityId] != nil {
+		return Personalities[c.PersonalityId].GetDialogue(id)
 	} else {
 		return Default.GetDialogue(id)
 	}
