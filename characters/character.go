@@ -3,6 +3,7 @@ package characters
 import (
 	"unicode/utf8"
 
+	"github.com/japanoise/gocademy/maps"
 	asciiart "github.com/japanoise/termbox-asciiart"
 	termbox "github.com/nsf/termbox-go"
 )
@@ -14,7 +15,7 @@ type Character struct {
 	Relationships   map[Id]*Relation
 	ID              Id
 	PersonalityId   Id
-	Loc             Location
+	Loc             *Location
 	Face            asciiart.Ascii
 	Sprite          rune
 	FrontHairId     Id
@@ -23,6 +24,7 @@ type Character struct {
 	TopicalDetailId Id
 	HairColor       termbox.Attribute
 	EyeColor        termbox.Attribute
+	Path            []*maps.Pather
 }
 
 func (c *Character) SayDialogue(id Id) string {

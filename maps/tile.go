@@ -77,6 +77,11 @@ func GetColor(t Tile) termbox.Attribute {
 	return termbox.Attribute((t >> 7) & COLORMASK)
 }
 
+// Is the tile a wall (not just a closed door)
+func IsWall(t Tile) bool {
+	return !IsPassable(t) && !IsDoor(t)
+}
+
 // Is the tile passable?
 func IsPassable(t Tile) bool {
 	return t&PASSMASK != 0

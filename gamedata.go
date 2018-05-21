@@ -22,7 +22,7 @@ func NewGame() *Gamedata {
 	ret.Chars = make(map[characters.Id]*characters.Character)
 	ret.PlayerId = ret.GetNextId()
 	player := CharGen(ret)
-	player.Loc = characters.Location{5, 5, maps.GROUNDFLOOR}
+	player.Loc = &characters.Location{5, 5, maps.GROUNDFLOOR}
 	ret.Chars[ret.PlayerId] = player
 	enames, bnames, gnames, surnames := LoadNames()
 	rand := rand.New(rand.NewSource(time.Now().UnixNano()))
@@ -48,6 +48,16 @@ func (g *Gamedata) GetNextId() characters.Id {
 	return ret
 }
 
-func (g *Gamedata) NextSpawnPoint() characters.Location {
-	return characters.Location{1, g.IdNum, maps.GROUNDFLOOR}
+func (g *Gamedata) NextSpawnPoint() *characters.Location {
+	return &characters.Location{1, g.IdNum, maps.GROUNDFLOOR}
+}
+
+func (g *Gamedata) GetCharacterIds() []string {
+	choices := make([]string, 0, len(g.Chars))
+	for key := range g.Chars {
+		if key != g.PlayerId {
+			choices = append(choices, string(key))
+		}
+	}
+	return choices
 }

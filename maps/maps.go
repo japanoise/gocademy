@@ -7,16 +7,17 @@ import (
 )
 
 type Map struct {
-	Tiles  []Tile
-	Size   int
-	Width  int
-	Height int
+	Tiles   []Tile
+	pathers []*Pather
+	Size    int
+	Width   int
+	Height  int
 }
 
 func NewMap(w, h int) *Map {
 	size := w * h
 	t := make([]Tile, size)
-	return &Map{t, size, w, h}
+	return &Map{t, nil, size, w, h}
 }
 
 func DemoMap(w, h int) *Map {
@@ -69,6 +70,20 @@ func (m *Map) DrawMap(startx, starty, width, height int) {
 			}
 		}
 	}
+}
+
+func (m *Map) GetPather(x, y int) *Pather {
+	if m.pathers == nil {
+		m.pathers = make([]*Pather, len(m.Tiles))
+	}
+	index := m.indexOf(x, y)
+	if m.indexOutOfBounds(index) {
+		return nil
+	}
+	if m.pathers[index] == nil {
+		m.pathers[index] = &Pather{x, y, m.Tiles[index], m}
+	}
+	return m.pathers[index]
 }
 
 func (m *Map) Serialize(w io.Writer) error {

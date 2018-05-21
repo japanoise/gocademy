@@ -7,6 +7,7 @@ import (
 
 	"github.com/japanoise/gocademy/characters"
 	"github.com/japanoise/gocademy/maps"
+	"github.com/japanoise/termbox-util"
 	"github.com/nsf/termbox-go"
 )
 
@@ -96,11 +97,25 @@ func main() {
 				target, message = MovePlayer(0, -1, player, charmaps)
 			case termbox.KeySpace:
 				message = fmt.Sprint(player.Loc)
+			case termbox.KeyHome:
+				choices := gamedata.GetCharacterIds()
+				cid := termutil.ChoiceIndex("Which character will you test pathfinding on?", choices, 0)
+				char := gamedata.Chars[characters.Id(choices[cid])]
+				if char == nil {
+					message = "char is nil"
+				} else {
+					message = GenPathToTarget(player.Loc.X, player.Loc.Y, char)
+				}
 			}
 		}
 		if target != nil {
 			message = Interact(player, target)
 			target = nil
+		}
+		for _, chara := range gamedata.Chars {
+			if chara.ID != gamedata.PlayerId {
+				Act(chara, charmaps[chara.Loc.MapNum])
+			}
 		}
 	}
 }
