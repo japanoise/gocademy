@@ -27,14 +27,19 @@ func GenPathToTarget(x, y int, c *characters.Character) string {
 
 func Act(c *characters.Character, cmap *charmap) {
 	if c.Path != nil {
-		target := cmap.moveNoCollide(c.Loc.X, c.Loc.Y, c.Path[0].X, c.Path[0].Y)
-		if target == nil {
-			c.Loc.X = c.Path[0].X
-			c.Loc.Y = c.Path[0].Y
-			if len(c.Path) == 1 {
-				c.Path = nil
-			} else {
-				c.Path = c.Path[1:]
+		tile, _ := AllMaps[c.Loc.MapNum].TileAt(c.Path[0].X, c.Path[0].Y)
+		if maps.IsDoor(tile) && !maps.IsPassable(tile) {
+			AllMaps[c.Loc.MapNum].SetTileAt(c.Path[0].X, c.Path[0].Y, maps.OpenDoor(tile))
+		} else {
+			target := cmap.moveNoCollide(c.Loc.X, c.Loc.Y, c.Path[0].X, c.Path[0].Y)
+			if target == nil {
+				c.Loc.X = c.Path[0].X
+				c.Loc.Y = c.Path[0].Y
+				if len(c.Path) == 1 {
+					c.Path = nil
+				} else {
+					c.Path = c.Path[1:]
+				}
 			}
 		}
 	}
