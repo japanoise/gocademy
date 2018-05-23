@@ -25,7 +25,20 @@ var (
 	BackHair      map[characters.Id]*characters.Element
 	HairAccessory map[characters.Id]*characters.Element
 	TopicalDetail map[characters.Id]*characters.Element
+	Warps         map[int]*maps.Pather
 )
+
+func warpId(from, to int) int {
+	return (from << 4) | to
+}
+
+func makeWarp(from, to, x, y int) {
+	Warps[warpId(from, to)] = AllMaps[from].GetPather(x, y)
+}
+
+func getWarpDest(warpId int) int {
+	return warpId & 0x0F
+}
 
 func LoadMaps() {
 	AllMaps = make([]*maps.Map, NUMOFMAPS)
@@ -37,6 +50,13 @@ func LoadMaps() {
 	AllMaps[maps.ROOF], _ = maps.Deserialize(r)
 	r = bytes.NewReader(MustAsset("bindata/athletics.bin"))
 	AllMaps[maps.ATHLETICS], _ = maps.Deserialize(r)
+	Warps = make(map[int]*maps.Pather)
+	makeWarp(maps.GROUNDFLOOR, maps.FIRSTFLOOR, 69, 39)
+	makeWarp(maps.GROUNDFLOOR, maps.ATHLETICS, 119, 0)
+	makeWarp(maps.ATHLETICS, maps.GROUNDFLOOR, 106, 149)
+	makeWarp(maps.FIRSTFLOOR, maps.GROUNDFLOOR, 66, 7)
+	makeWarp(maps.FIRSTFLOOR, maps.ROOF, 56, 27)
+	makeWarp(maps.ROOF, maps.FIRSTFLOOR, 56, 27)
 }
 
 func LoadNames() ([]string, []string, []string, []string) {
@@ -104,7 +124,7 @@ func main() {
 				if char == nil {
 					message = "char is nil"
 				} else {
-					message = GenPathToTarget(player.Loc.X, player.Loc.Y, char)
+					message = GenPathToTarget(player.Loc.X, player.Loc.Y, player.Loc.MapNum, char)
 				}
 			}
 		}
@@ -114,7 +134,7 @@ func main() {
 		}
 		for _, chara := range gamedata.Chars {
 			if chara.ID != gamedata.PlayerId {
-				Act(chara, charmaps[chara.Loc.MapNum])
+				Act(chara, charmaps)
 			}
 		}
 	}
