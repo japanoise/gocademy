@@ -1,3 +1,4 @@
 gocademy
 cmd/csvToBin/csvToBin
 cmd/asciiEditor/asciiEditor
+cmd/grassFuzzer/grassFuzzer
