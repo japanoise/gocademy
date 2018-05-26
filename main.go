@@ -101,6 +101,7 @@ func main() {
 	var target *characters.Character = nil
 	var message = ""
 	player := gamedata.Chars[gamedata.PlayerId]
+	player.ID = gamedata.PlayerId
 	charmaps := constructCharMaps(gamedata)
 
 	for playing {
