@@ -26,6 +26,9 @@ type Character struct {
 	EyeColor        termbox.Attribute
 	Path            []*maps.Pather
 	Target          Id
+	Leye            string `json:"-"`
+	Reye            string `json:"-"`
+	Mouth           string `json:"-"`
 }
 
 func (c *Character) SayDialogue(id Id) string {
