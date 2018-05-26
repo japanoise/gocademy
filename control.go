@@ -71,7 +71,7 @@ func MovePlayer(dx, dy int, player *characters.Character, charmaps []*charmap) (
 			} else if player.Loc.MapNum == maps.FIRSTFLOOR {
 				if destX == 56 && destY == 27 {
 					// Roof staircase
-					return pJumpMap(player, maps.ROOF, destX, destY, charmaps[player.Loc.MapNum], player.Loc.X, player.Loc.Y, charmaps[maps.ROOF])
+					return pJumpMap(player, maps.ROOF, destX, destY, charmaps[player.Loc.MapNum], destX, destY, charmaps[maps.ROOF])
 				} else if destY >= 5 && destY <= 7 && destX >= 65 && destX <= 67 {
 					// Central staircase
 					return pJumpMap(player, maps.GROUNDFLOOR, destX, destY, charmaps[player.Loc.MapNum], destX+3, destY+32, charmaps[maps.GROUNDFLOOR])
@@ -84,7 +84,7 @@ func MovePlayer(dx, dy int, player *characters.Character, charmaps []*charmap) (
 			} else if player.Loc.MapNum == maps.ROOF {
 				if destX == 56 && destY == 27 {
 					// Roof staircase
-					return pJumpMap(player, maps.FIRSTFLOOR, destX, destY, charmaps[player.Loc.MapNum], player.Loc.X, player.Loc.Y, charmaps[maps.FIRSTFLOOR])
+					return pJumpMap(player, maps.FIRSTFLOOR, destX, destY, charmaps[player.Loc.MapNum], destX, destY, charmaps[maps.FIRSTFLOOR])
 				}
 			}
 		}

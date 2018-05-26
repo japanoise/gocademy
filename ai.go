@@ -53,6 +53,7 @@ func findWarp(from, to int) *maps.Pather {
 
 func Act(g *Gamedata, c *characters.Character, cmaps []*charmap) {
 	if c.Path == nil {
+		actOnWarpPoints(c, cmaps)
 		if c.Target != "" {
 			tc := g.Chars[c.Target]
 			GenPathToTarget(tc.Loc.X, tc.Loc.Y, tc.Loc.MapNum, c)
@@ -61,6 +62,22 @@ func Act(g *Gamedata, c *characters.Character, cmaps []*charmap) {
 		c.Path = nil
 	} else {
 		followPath(c, cmaps)
+	}
+}
+
+// Warp the npc if they're standing on a warp point.
+func actOnWarpPoints(c *characters.Character, cmaps []*charmap) {
+	for warpID, warpPoint := range Warps {
+		if warpPoint.X == c.Loc.X && warpPoint.Y == c.Loc.Y && c.Loc.MapNum == getWarpSource(warpID) {
+			newMapId := getWarpDest(warpID)
+			endPather := Warps[warpId(newMapId, c.Loc.MapNum)]
+			x, y := endPather.X, endPather.Y
+			jumpMap(c.Loc.X, c.Loc.Y, cmaps[c.Loc.MapNum], x, y, cmaps[newMapId])
+			c.Loc.X = x
+			c.Loc.Y = y
+			c.Loc.MapNum = newMapId
+			c.Path = nil
+		}
 	}
 }
 
@@ -84,23 +101,6 @@ func followPath(c *characters.Character, cmaps []*charmap) {
 			c.Loc.X = c.Path[0].X
 			c.Loc.Y = c.Path[0].Y
 			if len(c.Path) == 1 {
-				// Check warp points
-				for warpID, warpPoint := range Warps {
-					if warpPoint.X == c.Path[0].X && warpPoint.Y == c.Path[0].Y && c.Loc.MapNum == getWarpSource(warpID) {
-						newMapId := getWarpDest(warpID)
-						endPather := Warps[warpId(newMapId, c.Loc.MapNum)]
-						x, y := endPather.X, endPather.Y
-						if cmaps[newMapId].data[x][y] == nil {
-							jumpMap(c.Loc.X, c.Loc.Y, cmaps[c.Loc.MapNum], x, y, cmaps[newMapId])
-							c.Loc.X = x
-							c.Loc.Y = y
-							c.Loc.MapNum = newMapId
-							c.Path = nil
-						}
-						return // Quit early; we'll wait at the warp point
-					}
-				}
-				// Evidently we're not trying to warp, so we're at our destination.
 				c.Path = nil
 			} else {
 				c.Path = c.Path[1:]
