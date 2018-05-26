@@ -25,6 +25,7 @@ type Character struct {
 	HairColor       termbox.Attribute
 	EyeColor        termbox.Attribute
 	Path            []*maps.Pather
+	Target          Id
 }
 
 func (c *Character) SayDialogue(id Id) string {

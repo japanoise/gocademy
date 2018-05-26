@@ -36,6 +36,10 @@ func makeWarp(from, to, x, y int) {
 	Warps[warpId(from, to)] = AllMaps[from].GetPather(x, y)
 }
 
+func getWarpSource(warpId int) int {
+	return warpId >> 4
+}
+
 func getWarpDest(warpId int) int {
 	return warpId & 0x0F
 }
@@ -124,7 +128,7 @@ func main() {
 				if char == nil {
 					message = "char is nil"
 				} else {
-					message = GenPathToTarget(player.Loc.X, player.Loc.Y, player.Loc.MapNum, char)
+					char.Target = gamedata.PlayerId
 				}
 			}
 		}
@@ -134,7 +138,7 @@ func main() {
 		}
 		for _, chara := range gamedata.Chars {
 			if chara.ID != gamedata.PlayerId {
-				Act(chara, charmaps)
+				Act(gamedata, chara, charmaps)
 			}
 		}
 	}
