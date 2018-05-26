@@ -16,7 +16,7 @@ func GenPathToTarget(x, y, mapNum int, c *characters.Character) string {
 	if mapNum == loc.MapNum {
 		to = m.GetPather(x, y)
 	} else {
-		to = Warps[warpId(loc.MapNum, mapNum)]
+		to = findWarp(loc.MapNum, mapNum)
 	}
 	mypath, _, found := astar.Path(from, to)
 	if found {
@@ -30,12 +30,35 @@ func GenPathToTarget(x, y, mapNum int, c *characters.Character) string {
 	return fmt.Sprint(c.Path)
 }
 
+func findWarp(from, to int) *maps.Pather {
+	ret := Warps[warpId(from, to)]
+	if ret == nil {
+		switch from {
+		case maps.ROOF:
+			// Roof's only exit.
+			return Warps[warpId(maps.ROOF, maps.FIRSTFLOOR)]
+		case maps.FIRSTFLOOR:
+			// The first floor lacks a warp to the athletics field, so return the G warp.
+			return Warps[warpId(maps.FIRSTFLOOR, maps.GROUNDFLOOR)]
+		case maps.GROUNDFLOOR:
+			// G floor lacks a warp to the roof, so return the staircase warp.
+			return Warps[warpId(maps.GROUNDFLOOR, maps.FIRSTFLOOR)]
+		case maps.ATHLETICS:
+			// Athletics field's only exit.
+			return Warps[warpId(maps.ATHLETICS, maps.GROUNDFLOOR)]
+		}
+	}
+	return ret
+}
+
 func Act(g *Gamedata, c *characters.Character, cmaps []*charmap) {
 	if c.Path == nil {
 		if c.Target != "" {
 			tc := g.Chars[c.Target]
 			GenPathToTarget(tc.Loc.X, tc.Loc.Y, tc.Loc.MapNum, c)
 		}
+	} else if len(c.Path) == 0 {
+		c.Path = nil
 	} else {
 		followPath(c, cmaps)
 	}
@@ -47,7 +70,17 @@ func followPath(c *characters.Character, cmaps []*charmap) {
 		AllMaps[c.Loc.MapNum].SetTileAt(c.Path[0].X, c.Path[0].Y, maps.OpenDoor(tile))
 	} else {
 		target := cmaps[c.Loc.MapNum].moveNoCollide(c.Loc.X, c.Loc.Y, c.Path[0].X, c.Path[0].Y)
-		if target == nil || target == c {
+		targetWantsMySpace := false
+		if target != nil && target.Path != nil && len(target.Path) != 0 {
+			targetWantsMySpace = target.Path[0].X == c.Loc.X && target.Path[0].Y == c.Loc.Y
+		}
+		if target == nil || target == c || targetWantsMySpace {
+			if targetWantsMySpace {
+				cmaps[c.Loc.MapNum].data[c.Loc.X][c.Loc.Y] = target
+				cmaps[c.Loc.MapNum].data[c.Path[0].X][c.Path[0].Y] = c
+				target.Loc.X = c.Loc.X
+				target.Loc.Y = c.Loc.Y
+			}
 			c.Loc.X = c.Path[0].X
 			c.Loc.Y = c.Path[0].Y
 			if len(c.Path) == 1 {

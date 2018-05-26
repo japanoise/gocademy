@@ -57,3 +57,16 @@ func jumpMap(sourcex, sourcey int, sourcec *charmap, destx, desty int, destc *ch
 	destc.data[destx][desty] = sourcec.data[sourcex][sourcey]
 	sourcec.data[sourcex][sourcey] = nil
 }
+
+// Safer wrapper around jumpMap for the player character
+func pJumpMap(player *characters.Character, destM, sourcex, sourcey int, sourcec *charmap, destx, desty int, destc *charmap) (*characters.Character, string) {
+	if destc.data[destx][desty] == nil {
+		player.Loc.X = destx
+		player.Loc.Y = desty
+		player.Loc.MapNum = destM
+		jumpMap(sourcex, sourcey, sourcec, destx, desty, destc)
+		return nil, ""
+	} else {
+		return destc.data[destx][desty], "There's someone blocking the way!"
+	}
+}

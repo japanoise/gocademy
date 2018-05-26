@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/japanoise/gocademy/characters"
 	"github.com/japanoise/termbox-util"
 )
@@ -39,6 +41,7 @@ func Interact(player, target *characters.Character) string {
 		"<Talk about clubs>",
 		"<Talk about love>",
 		"<Talk about sex>",
+		"[DEBUG] Tell me what your path is.",
 		"Bye.",
 	}, 6, interactDraw(player, target))
 	switch choice {
@@ -54,6 +57,8 @@ func Interact(player, target *characters.Character) string {
 		return target.SayDialogue(characters.DialogueNo)
 	case 5:
 		return target.SayDialogue(characters.DialogueNo)
+	case 6:
+		return fmt.Sprint(target.Path)
 	default:
 		return target.SayDialogue(characters.DialogueBye)
 	}

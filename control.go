@@ -63,42 +63,28 @@ func MovePlayer(dx, dy int, player *characters.Character, charmaps []*charmap) (
 			if player.Loc.MapNum == maps.GROUNDFLOOR {
 				if destY == 0 && destX >= 118 && destY <= 120 {
 					// North gate
-					player.Loc.X = destX - 13
-					player.Loc.Y = 149
-					jumpMap(destX, destY, charmaps[player.Loc.MapNum], player.Loc.X, player.Loc.Y, charmaps[maps.ATHLETICS])
-					player.Loc.MapNum = maps.ATHLETICS
+					return pJumpMap(player, maps.ATHLETICS, destX, destY, charmaps[player.Loc.MapNum], destX-13, 149, charmaps[maps.ATHLETICS])
 				} else if destY >= 37 && destY <= 39 && destX >= 68 && destX <= 70 {
 					// Central staircase
-					player.Loc.X = destX - 3
-					player.Loc.Y = destY - 32
-					jumpMap(destX, destY, charmaps[player.Loc.MapNum], player.Loc.X, player.Loc.Y, charmaps[maps.FIRSTFLOOR])
-					player.Loc.MapNum = maps.FIRSTFLOOR
+					return pJumpMap(player, maps.FIRSTFLOOR, destX, destY, charmaps[player.Loc.MapNum], destX-3, destY-32, charmaps[maps.FIRSTFLOOR])
 				}
 			} else if player.Loc.MapNum == maps.FIRSTFLOOR {
 				if destX == 56 && destY == 27 {
 					// Roof staircase
-					jumpMap(destX, destY, charmaps[player.Loc.MapNum], player.Loc.X, player.Loc.Y, charmaps[maps.ROOF])
-					player.Loc.MapNum = maps.ROOF
+					return pJumpMap(player, maps.ROOF, destX, destY, charmaps[player.Loc.MapNum], player.Loc.X, player.Loc.Y, charmaps[maps.ROOF])
 				} else if destY >= 5 && destY <= 7 && destX >= 65 && destX <= 67 {
 					// Central staircase
-					player.Loc.X = destX + 3
-					player.Loc.Y = destY + 32
-					jumpMap(destX, destY, charmaps[player.Loc.MapNum], player.Loc.X, player.Loc.Y, charmaps[maps.GROUNDFLOOR])
-					player.Loc.MapNum = maps.GROUNDFLOOR
+					return pJumpMap(player, maps.GROUNDFLOOR, destX, destY, charmaps[player.Loc.MapNum], destX+3, destY+32, charmaps[maps.GROUNDFLOOR])
 				}
 			} else if player.Loc.MapNum == maps.ATHLETICS {
 				// South gate
 				if destY == 149 && destX >= 105 && destX <= 107 {
-					player.Loc.X = destX + 13
-					player.Loc.Y = 0
-					jumpMap(destX, destY, charmaps[player.Loc.MapNum], player.Loc.X, player.Loc.Y, charmaps[maps.GROUNDFLOOR])
-					player.Loc.MapNum = maps.GROUNDFLOOR
+					return pJumpMap(player, maps.GROUNDFLOOR, destX, destY, charmaps[player.Loc.MapNum], destX+13, 0, charmaps[maps.GROUNDFLOOR])
 				}
 			} else if player.Loc.MapNum == maps.ROOF {
 				if destX == 56 && destY == 27 {
 					// Roof staircase
-					jumpMap(destX, destY, charmaps[player.Loc.MapNum], player.Loc.X, player.Loc.Y, charmaps[maps.FIRSTFLOOR])
-					player.Loc.MapNum = maps.FIRSTFLOOR
+					return pJumpMap(player, maps.FIRSTFLOOR, destX, destY, charmaps[player.Loc.MapNum], player.Loc.X, player.Loc.Y, charmaps[maps.FIRSTFLOOR])
 				}
 			}
 		}
