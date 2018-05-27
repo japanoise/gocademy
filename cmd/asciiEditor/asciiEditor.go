@@ -12,7 +12,7 @@ import (
 
 const (
 	WIDTH        int = 11
-	HEIGHT       int = 8
+	HEIGHT       int = 9
 	INSTRUCTIONS int = WIDTH + 9
 	PALLETTE     int = HEIGHT + 4
 )
@@ -29,7 +29,15 @@ func drawScreen(a *asciiart.Ascii, cbg, cfg termbox.Attribute, cx, cy int) {
 		termbox.SetCell(WIDTH+3, 2+i, '|', termbox.ColorDefault, termbox.ColorDefault)
 	}
 	termutil.Printstring("+-----------+", 2, HEIGHT+2)
-	a.DrawAscii(3, 2)
+	termutil.PrintstringColored(240, "   _____", 3, 3)
+	termutil.PrintstringColored(240, "  / _ _ \\", 3, 4)
+	termutil.PrintstringColored(240, "  | ^ * |", 3, 5)
+	termutil.PrintstringColored(240, "  |     |", 3, 6)
+	termutil.PrintstringColored(240, "  \\  v  /", 3, 7)
+	termutil.PrintstringColored(240, "   \\___/", 3, 8)
+	termutil.PrintstringColored(240, "  __| |__", 3, 9)
+	termutil.PrintstringColored(240, " |   v   |", 3, 10)
+	a.DrawAsciiNoClobber(3, 2)
 
 	termutil.Printstring("gocademy ascii editor", INSTRUCTIONS, 0)
 	termutil.Printstring("^C          - Exit", INSTRUCTIONS, 2)
@@ -67,6 +75,7 @@ func main() {
 	}
 	termbox.Init()
 	defer termbox.Close()
+	termbox.SetOutputMode(termbox.Output256)
 	cx, cy := 0, 0
 	cbg, cfg := termbox.ColorDefault, termbox.ColorDefault
 	for {
