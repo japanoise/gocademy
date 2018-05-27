@@ -51,7 +51,8 @@ func drawScreen(a *asciiart.Ascii, cbg, cfg termbox.Attribute, cx, cy int) {
 	termutil.Printstring("^D, DEL, BS - Delete char at point", INSTRUCTIONS, 10)
 	termutil.Printstring("^J          - Next BG color", INSTRUCTIONS, 11)
 	termutil.Printstring("^K          - Next FG color", INSTRUCTIONS, 12)
-	termutil.Printstring("Other characters self insert.", INSTRUCTIONS, 14)
+	termutil.Printstring("^Q          - Erase your work", INSTRUCTIONS, 13)
+	termutil.Printstring("Other characters self insert.", INSTRUCTIONS, 15)
 
 	termutil.Printstring("bg color", 0, PALLETTE)
 	termbox.SetCell(int(cbg)*2, PALLETTE+1, '>', termbox.ColorDefault, termbox.ColorDefault)
@@ -65,7 +66,7 @@ func drawScreen(a *asciiart.Ascii, cbg, cfg termbox.Attribute, cx, cy int) {
 	termbox.Flush()
 }
 
-func main() {
+func resetArt() *asciiart.Ascii {
 	art := &asciiart.Ascii{make([][]asciiart.AsciiTile, HEIGHT)}
 	for i := range art.Data {
 		art.Data[i] = make([]asciiart.AsciiTile, WIDTH)
@@ -73,6 +74,11 @@ func main() {
 			art.Data[i][j] = asciiart.AsciiTile{C: " ", Fg: termbox.ColorDefault, Bg: termbox.ColorDefault}
 		}
 	}
+	return art
+}
+
+func main() {
+	art := resetArt()
 	termbox.Init()
 	defer termbox.Close()
 	termbox.SetOutputMode(termbox.Output256)
@@ -130,6 +136,8 @@ func main() {
 				art.Data[cy][cx] = asciiart.AsciiTile{C: " ", Fg: termbox.ColorDefault, Bg: termbox.ColorDefault}
 			case termbox.KeySpace:
 				art.Data[cy][cx] = asciiart.AsciiTile{C: " ", Fg: cfg, Bg: cbg}
+			case termbox.KeyCtrlQ:
+				art = resetArt()
 			}
 		} else {
 			art.Data[cy][cx] = asciiart.AsciiTile{C: string(ev.Ch), Fg: cfg, Bg: cbg}
