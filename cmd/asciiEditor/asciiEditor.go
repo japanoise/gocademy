@@ -82,65 +82,81 @@ func main() {
 	termbox.Init()
 	defer termbox.Close()
 	termbox.SetOutputMode(termbox.Output256)
+	termbox.SetInputMode(termbox.InputMouse)
+
 	cx, cy := 0, 0
 	cbg, cfg := termbox.ColorDefault, termbox.ColorDefault
 	for {
 		drawScreen(art, cbg, cfg, cx, cy)
 		ev := termbox.PollEvent()
-		if ev.Ch == 0 {
-			switch ev.Key {
-			case termbox.KeyCtrlC:
-				return
-			case termbox.KeyArrowLeft, termbox.KeyCtrlB:
-				if cx > 0 {
-					cx--
+		if ev.Type == termbox.EventMouse {
+			x, y := ev.MouseX, ev.MouseY
+			if x >= 3 && x <= 14 && y >= 2 && y <= 10 {
+				cx, cy = x-3, y-2
+			} else if y >= PALLETTE && y <= PALLETTE+3 && x < 18 {
+				col := (x - (x % 2)) / 2
+				if y == PALLETTE || y == PALLETTE+1 {
+					cbg = termbox.Attribute(col)
+				} else {
+					cfg = termbox.Attribute(col)
 				}
-			case termbox.KeyArrowRight, termbox.KeyCtrlF:
-				if cx < WIDTH-1 {
-					cx++
-				}
-			case termbox.KeyArrowUp, termbox.KeyCtrlP:
-				if cy > 0 {
-					cy--
-				}
-			case termbox.KeyArrowDown, termbox.KeyCtrlN:
-				if cy < HEIGHT-1 {
-					cy++
-				}
-			case termbox.KeyCtrlA, termbox.KeyHome:
-				cx = 0
-			case termbox.KeyCtrlE, termbox.KeyEnd:
-				cx = WIDTH - 1
-			case termbox.KeyCtrlJ:
-				cbg = (cbg + 1) % 9
-			case termbox.KeyCtrlK:
-				cfg = (cfg + 1) % 9
-			case termbox.KeyCtrlS:
-				fn := termutil.Prompt("Filename?", func(int, int) {
-					drawScreen(art, cbg, cfg, cx, cy)
-				})
-				if fn != "" {
-					file, err := os.Create(fn)
-					if err != nil {
-						termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
-						termutil.Printstring(err.Error(), 0, 0)
-						termbox.Flush()
-						termbox.PollEvent()
-					} else {
-						enc := json.NewEncoder(file)
-						enc.Encode(art)
-						file.Close()
-					}
-				}
-			case termbox.KeyBackspace, termbox.KeyBackspace2, termbox.KeyDelete, termbox.KeyCtrlD:
-				art.Data[cy][cx] = asciiart.AsciiTile{C: " ", Fg: termbox.ColorDefault, Bg: termbox.ColorDefault}
-			case termbox.KeySpace:
-				art.Data[cy][cx] = asciiart.AsciiTile{C: " ", Fg: cfg, Bg: cbg}
-			case termbox.KeyCtrlQ:
-				art = resetArt()
 			}
-		} else {
-			art.Data[cy][cx] = asciiart.AsciiTile{C: string(ev.Ch), Fg: cfg, Bg: cbg}
+		} else if ev.Type == termbox.EventKey {
+			if ev.Ch == 0 {
+				switch ev.Key {
+				case termbox.KeyCtrlC:
+					return
+				case termbox.KeyArrowLeft, termbox.KeyCtrlB:
+					if cx > 0 {
+						cx--
+					}
+				case termbox.KeyArrowRight, termbox.KeyCtrlF:
+					if cx < WIDTH-1 {
+						cx++
+					}
+				case termbox.KeyArrowUp, termbox.KeyCtrlP:
+					if cy > 0 {
+						cy--
+					}
+				case termbox.KeyArrowDown, termbox.KeyCtrlN:
+					if cy < HEIGHT-1 {
+						cy++
+					}
+				case termbox.KeyCtrlA, termbox.KeyHome:
+					cx = 0
+				case termbox.KeyCtrlE, termbox.KeyEnd:
+					cx = WIDTH - 1
+				case termbox.KeyCtrlJ:
+					cbg = (cbg + 1) % 9
+				case termbox.KeyCtrlK:
+					cfg = (cfg + 1) % 9
+				case termbox.KeyCtrlS:
+					fn := termutil.Prompt("Filename?", func(int, int) {
+						drawScreen(art, cbg, cfg, cx, cy)
+					})
+					if fn != "" {
+						file, err := os.Create(fn)
+						if err != nil {
+							termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
+							termutil.Printstring(err.Error(), 0, 0)
+							termbox.Flush()
+							termbox.PollEvent()
+						} else {
+							enc := json.NewEncoder(file)
+							enc.Encode(art)
+							file.Close()
+						}
+					}
+				case termbox.KeyBackspace, termbox.KeyBackspace2, termbox.KeyDelete, termbox.KeyCtrlD:
+					art.Data[cy][cx] = asciiart.AsciiTile{C: " ", Fg: termbox.ColorDefault, Bg: termbox.ColorDefault}
+				case termbox.KeySpace:
+					art.Data[cy][cx] = asciiart.AsciiTile{C: " ", Fg: cfg, Bg: cbg}
+				case termbox.KeyCtrlQ:
+					art = resetArt()
+				}
+			} else {
+				art.Data[cy][cx] = asciiart.AsciiTile{C: string(ev.Ch), Fg: cfg, Bg: cbg}
+			}
 		}
 	}
 }
