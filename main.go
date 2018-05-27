@@ -132,15 +132,17 @@ func main() {
 				} else {
 					char.Target = gamedata.PlayerId
 				}
+			default:
+				continue
 			}
-		}
-		if target != nil {
-			message = Interact(player, target)
-			target = nil
-		}
-		for _, chara := range gamedata.Chars {
-			if chara.ID != gamedata.PlayerId {
-				Act(gamedata, chara, charmaps)
+			if target != nil {
+				message = Interact(player, target)
+				target = nil
+			}
+			for _, chara := range gamedata.Chars {
+				if chara.ID != gamedata.PlayerId {
+					Act(gamedata, chara, charmaps)
+				}
 			}
 		}
 	}
