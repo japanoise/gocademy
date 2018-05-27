@@ -109,20 +109,21 @@ func main() {
 		message = ""
 		ev := termbox.PollEvent()
 		if ev.Type == termbox.EventKey {
-			switch ev.Key {
-			case termbox.KeyEsc:
+			key := termutil.ParseTermboxEvent(ev)
+			switch key {
+			case "ESC", "q":
 				playing, message = PauseMenu(gamedata)
-			case termbox.KeyArrowRight:
+			case "RIGHT", "C-f":
 				target, message = MovePlayer(1, 0, player, charmaps)
-			case termbox.KeyArrowLeft:
+			case "LEFT", "C-b":
 				target, message = MovePlayer(-1, 0, player, charmaps)
-			case termbox.KeyArrowDown:
+			case "DOWN", "C-n":
 				target, message = MovePlayer(0, 1, player, charmaps)
-			case termbox.KeyArrowUp:
+			case "UP", "C-p":
 				target, message = MovePlayer(0, -1, player, charmaps)
-			case termbox.KeySpace:
+			case " ":
 				message = fmt.Sprint(player.Loc)
-			case termbox.KeyHome:
+			case "Home":
 				choices := gamedata.GetCharacterIds()
 				cid := termutil.ChoiceIndex("Which character will you test pathfinding on?", choices, 0)
 				char := gamedata.Chars[characters.Id(choices[cid])]
