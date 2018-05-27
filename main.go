@@ -103,6 +103,7 @@ func main() {
 	player := gamedata.Chars[gamedata.PlayerId]
 	player.ID = gamedata.PlayerId
 	charmaps := constructCharMaps(gamedata)
+	rand := getNewRand()
 
 	for playing {
 		DrawScreen(charmaps[player.Loc.MapNum], player, message)
@@ -141,7 +142,7 @@ func main() {
 			}
 			for _, chara := range gamedata.Chars {
 				if chara.ID != gamedata.PlayerId {
-					Act(gamedata, chara, charmaps)
+					Act(gamedata, rand, chara, charmaps)
 				}
 			}
 		}

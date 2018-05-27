@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 
 	astar "github.com/beefsack/go-astar"
 	"github.com/japanoise/gocademy/characters"
@@ -51,10 +52,41 @@ func findWarp(from, to int) *maps.Pather {
 	return ret
 }
 
-func Act(g *Gamedata, c *characters.Character, cmaps []*charmap) {
+// Main AI entry point. Called every turn.
+func Act(g *Gamedata, rand *rand.Rand, c *characters.Character, cmaps []*charmap) {
 	if c.Path == nil {
 		actOnWarpPoints(c, cmaps)
-		if c.Target != "" {
+		if c.Target == "" {
+			switch c.CurrentMood {
+			case characters.MoodAngry:
+				// Nothing yet. Just stew for now.
+			case characters.MoodSad:
+				if c.PartnerId == "" {
+					// Mope by yourself
+					goToQuietArea(g, rand, c)
+				} else {
+					// Find partner for comfort
+					c.Target = c.PartnerId
+				}
+			case characters.MoodBlush:
+				if c.PartnerId == "" {
+					// Nothing yet. Find crush to talk to, etc.
+				} else {
+					// Find partner to talk to.
+					c.Target = c.PartnerId
+				}
+			case characters.MoodLewd:
+				if c.PartnerId == "" {
+					// find somewhere quiet to... y'know.
+					goToQuietArea(g, rand, c)
+				} else {
+					// find partner for relief :lenny:
+					c.Target = c.PartnerId
+				}
+			default:
+				// For now, just loiter.
+			}
+		} else {
 			tc := g.Chars[c.Target]
 			GenPathToTarget(tc.Loc.X, tc.Loc.Y, tc.Loc.MapNum, c)
 		}
@@ -78,6 +110,43 @@ func actOnWarpPoints(c *characters.Character, cmaps []*charmap) {
 			c.Loc.MapNum = newMapId
 			c.Path = nil
 		}
+	}
+}
+
+// Find the NPC somewhere quiet to go
+func goToQuietArea(g *Gamedata, rand *rand.Rand, c *characters.Character) {
+	switch c.Loc.MapNum {
+	case maps.ATHLETICS:
+		// Supply closet
+		GenPathToTarget(162, 116, maps.ATHLETICS, c)
+	case maps.GROUNDFLOOR:
+		switch rand.Intn(4) {
+		case 0:
+			// West janitor closet
+			GenPathToTarget(24, 33, maps.GROUNDFLOOR, c)
+		case 1:
+			// East janitor closet
+			GenPathToTarget(114, 33, maps.GROUNDFLOOR, c)
+		case 2:
+			// East edge of the building
+			GenPathToTarget(136, 54, maps.GROUNDFLOOR, c)
+		case 3:
+			// West edge of the building
+			GenPathToTarget(1, 54, maps.GROUNDFLOOR, c)
+		}
+	case maps.FIRSTFLOOR:
+		switch rand.Intn(2) {
+		case 0:
+			// West janitor closet
+			GenPathToTarget(21, 1, maps.FIRSTFLOOR, c)
+		case 1:
+			// East janitor closet
+			GenPathToTarget(111, 1, maps.FIRSTFLOOR, c)
+		}
+	case maps.ROOF:
+		// There's not really anywhere quiet on the roof, so just go back down.
+		warp := Warps[warpId(maps.ROOF, maps.FIRSTFLOOR)]
+		GenPathToTarget(warp.X, warp.Y, maps.ROOF, c)
 	}
 }
 

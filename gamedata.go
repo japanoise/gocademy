@@ -77,7 +77,7 @@ func NewGame() *Gamedata {
 
 func (g *Gamedata) genStudents(numStud int) {
 	enames, bnames, gnames, surnames := LoadNames()
-	rand := rand.New(rand.NewSource(time.Now().UnixNano()))
+	rand := getNewRand()
 	backhairids := make([]characters.Id, 0, len(BackHair))
 	for key := range BackHair {
 		backhairids = append(backhairids, key)
@@ -111,4 +111,8 @@ func (g *Gamedata) GetCharacterIds() []string {
 		}
 	}
 	return choices
+}
+
+func getNewRand() *rand.Rand {
+	return rand.New(rand.NewSource(time.Now().UnixNano()))
 }

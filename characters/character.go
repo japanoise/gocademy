@@ -29,6 +29,8 @@ type Character struct {
 	Leye            string `json:"-"`
 	Reye            string `json:"-"`
 	Mouth           string `json:"-"`
+	CurrentMood     Mood
+	PartnerId       Id
 }
 
 func (c *Character) SayDialogue(id Id) string {
